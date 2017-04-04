@@ -1,17 +1,22 @@
 package com.panos.mir;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
+@Table(name = "recipes")
 public class Recipes {
 
-    @Column(name = "user_id")
-    private int userId;
+//    Remove comments for user_id
+//    @Column(name = "user_id")
+//    private int user_id;
 
     @Column(name = "id")
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column(name = "title")
@@ -20,8 +25,23 @@ public class Recipes {
     @Column(name = "description")
     private String description;
 
-    public Recipes(int userId, int id, String title, String description) {
-        this.userId = userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private Users user;
+
+    @ManyToMany(mappedBy = "user_favorites")
+    private Set<Users> users;
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public Recipes(int id, String title, String description) {
+//        this.user_id = user_id;
         this.id = id;
         this.title = title;
         this.description = description;
@@ -30,13 +50,13 @@ public class Recipes {
     public Recipes() {
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+//    public int getUser_id() {
+//        return user_id;
+//    }
+//
+//    public void setUser_id(int user_id) {
+//        this.user_id = user_id;
+//    }
 
     public int getId() {
         return id;
@@ -61,4 +81,5 @@ public class Recipes {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }
