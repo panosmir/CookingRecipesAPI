@@ -1,7 +1,4 @@
-package com.panos.mir;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonManagedReference;
+package com.panos.mir.model;
 
 import javax.persistence.*;
 import java.util.Set;

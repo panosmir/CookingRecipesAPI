@@ -1,4 +1,4 @@
-package com.panos.mir;
+package com.panos.mir.rootnames;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -8,6 +8,6 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface CustomJsonRootName {
-    String singular();
-    String plural();
+    String users();
+    String recipes();
 }

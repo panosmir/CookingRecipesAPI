@@ -1,7 +1,6 @@
-package com.panos.mir;
+package com.panos.mir.model;
 
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import org.springframework.context.annotation.Primary;
 
 import javax.persistence.*;
 import java.util.*;
@@ -18,7 +17,7 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int user_id;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @Column(name = "password")
