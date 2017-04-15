@@ -76,6 +76,17 @@ public class RecipesController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @DeleteMapping(path = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<Map<String, Iterable<Recipes>>> deleteRecipe(@RequestBody Recipes recipes){
+        if(recipes.getUser() != null){
+            recipes.getUser().getUser_id();
+            repo.deleteByUserUser_id(recipes.getUser().getUser_id());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+
 //    @PostMapping(path = "/all/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<Recipes> create(@RequestBody Recipes recipes){
 //        Recipes saved = repo.save(recipes);
