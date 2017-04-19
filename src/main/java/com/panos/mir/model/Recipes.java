@@ -7,10 +7,6 @@ import java.util.Set;
 @Table(name = "recipes")
 public class Recipes {
 
-//    Remove comments for user_id
-//    @Column(name = "user_id")
-//    private int user_id;
-
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,7 +34,6 @@ public class Recipes {
     }
 
     public Recipes(int id, String title, String description) {
-//        this.user_id = user_id;
         this.id = id;
         this.title = title;
         this.description = description;
@@ -47,13 +42,6 @@ public class Recipes {
     public Recipes() {
     }
 
-//    public int getUser_id() {
-//        return user_id;
-//    }
-//
-//    public void setUser_id(int user_id) {
-//        this.user_id = user_id;
-//    }
 
     public int getId() {
         return id;

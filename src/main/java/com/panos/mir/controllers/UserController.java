@@ -1,12 +1,11 @@
 package com.panos.mir.controllers;
 
 import com.panos.mir.exceptions.BadRequestException;
-import com.panos.mir.model.Recipes;
 import com.panos.mir.repositories.UserRepository;
 import com.panos.mir.exceptions.NotFoundException;
 import com.panos.mir.model.Users;
 import com.panos.mir.rootnames.CustomJsonRootName;
-import com.panos.mir.rootnames.RecipesRootName;
+import com.panos.mir.rootnames.ApiRootElementNames;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.NoResultException;
 import java.util.*;
 
 /**
@@ -27,13 +25,13 @@ public class UserController {
     @Autowired
     private UserRepository repository;
 
-    //Returns all the users (For testing capabilities only)
+    //Returns all the users (For testing purposes only)
     @GetMapping("/all")
     public @ResponseBody
     ResponseEntity<Map<String, Iterable<Users>>> getUsers() {
         List<Users> users = (List<Users>) repository.findAll();
         Map result = new HashMap();
-        result.put(RecipesRootName.class.getAnnotation(CustomJsonRootName.class).users(), users);
+        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).users(), users);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
