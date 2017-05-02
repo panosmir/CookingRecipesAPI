@@ -1,6 +1,9 @@
 package com.panos.mir.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -25,6 +28,10 @@ public class Recipes {
     @ManyToMany(mappedBy = "user_favorites")
     private Set<Users> users;
 
+    @ManyToMany
+    @JoinTable(name = "recipes_has_ingredients", joinColumns = @JoinColumn(name = "recipes_id"), inverseJoinColumns = @JoinColumn(name = "ingredients_id"))
+    private Set<Ingredients> ingredients = new HashSet<>();
+
     public Users getUser() {
         return user;
     }
@@ -41,7 +48,6 @@ public class Recipes {
 
     public Recipes() {
     }
-
 
     public int getId() {
         return id;

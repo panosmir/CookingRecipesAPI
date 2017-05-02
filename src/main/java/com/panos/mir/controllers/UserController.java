@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-/**
- * Created by Panos on 3/30/2017.
- */
 @Controller
 @RequestMapping(path = "/users")
 public class UserController {
@@ -48,6 +45,7 @@ public class UserController {
     }
 
     //Login call.
+    //// TODO: 4/21/2017 Create a logout POST call. Reqs are a boolean value in database. Grab that value if true so recipes
     @PostMapping(path = "/all/findUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Users> findUser(@RequestBody Users user) {
         if (repository.findFirstByUsernameAndPassword(user.getUsername(), user.getPassword()) != null) {

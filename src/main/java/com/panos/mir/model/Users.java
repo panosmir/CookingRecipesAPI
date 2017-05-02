@@ -1,5 +1,6 @@
 package com.panos.mir.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.context.annotation.Primary;
 
 import javax.persistence.*;
@@ -27,7 +28,7 @@ public class Users {
     private Set<Recipes> recipes;
 
     @ManyToMany
-    @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "users_id"), inverseJoinColumns = @JoinColumn(name = "id"))
+    @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "users_user_id"), inverseJoinColumns = @JoinColumn(name = "recipes_id"))
     private Set<Recipes> user_favorites;
 
     public Users() {
