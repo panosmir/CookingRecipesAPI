@@ -17,7 +17,6 @@ import java.util.Set;
 /**
  * Created by Panos on 3/22/2017.
  */
-@Repository
 public interface RecipesRepository extends CrudRepository<Recipes, Integer>{
 
     List<Recipes> findAllByTitleIsLike(String title);
@@ -27,16 +26,10 @@ public interface RecipesRepository extends CrudRepository<Recipes, Integer>{
     @Query(value = "SELECT * FROM recipes WHERE user_id=?1", nativeQuery = true)
     List<Recipes> findAllByUserUser_id(int id);
 
-//    @Modifying
-//    @Transactional
-//    @Query(value = "DELETE FROM recipes WHERE user_id=?1 AND id=?2", nativeQuery = true)
-//    void deleteByUserUser_id(int userId, int id);
-
     @Query(value = "SELECT * FROM recipes WHERE user_id=?1 AND id=?2", nativeQuery = true)
     Recipes findRecipesByUserAndId(int userId, int id);
 
     @Query("select r.ingredients from Recipes r where r.id=:id")
     Set<Ingredients> getIngredientsByRecipesId(@Param("id") int id);
-
 
 }

@@ -1,14 +1,13 @@
 package com.panos.mir.model;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.springframework.context.annotation.Primary;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * Created by Panos on 3/30/2017.
- */
 @Entity
 @Table(name = "users")
 public class Users {
@@ -25,18 +24,16 @@ public class Users {
     private String password;
 
     @OneToMany(mappedBy = "user")
+//    @JsonBackReference
     private Set<Recipes> recipes;
 
     @ManyToMany
-    @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "users_user_id"), inverseJoinColumns = @JoinColumn(name = "recipes_id"))
-    private Set<Recipes> user_favorites;
+    @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipes_id"))
+//    @JsonManagedReference
+    private Set<Recipes> user_favorites = new HashSet<>();
 
     public Users() {
-    }
-
-    public Users(String username, String password) {
-        this.username = username;
-        this.password = password;
     }
 
     public int getUser_id() {
@@ -63,4 +60,21 @@ public class Users {
         this.password = password;
     }
 
+    public void setRecipes(Set<Recipes> recipes) {
+        this.recipes = recipes;
+    }
+
+    public void setUser_favorites(Set<Recipes> user_favorites) {
+        this.user_favorites = user_favorites;
+    }
+
+    @JsonIgnore
+    public Set<Recipes> getUser_favorites() {
+        return user_favorites;
+    }
+
+    @JsonIgnore
+    public Set<Recipes> getRecipes() {
+        return recipes;
+    }
 }

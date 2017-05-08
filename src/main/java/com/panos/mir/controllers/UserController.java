@@ -1,6 +1,8 @@
 package com.panos.mir.controllers;
 
 import com.panos.mir.exceptions.BadRequestException;
+import com.panos.mir.model.Recipes;
+import com.panos.mir.model.UserContext;
 import com.panos.mir.repositories.UserRepository;
 import com.panos.mir.exceptions.NotFoundException;
 import com.panos.mir.model.Users;
@@ -35,11 +37,10 @@ public class UserController {
     //Register a user
     @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Users> create(@RequestBody Users user) {
-        if (repository.findFirstByUsernameOrPassword(user.getUsername(), user.getPassword()) != null) {
+        if (repository.findFirstByUsername(user.getUsername()) == null) {
             Users saved = repository.save(user);
             return new ResponseEntity<Users>(saved, HttpStatus.CREATED);
-        }
-        else {
+        } else {
             throw new BadRequestException();
         }
     }
@@ -53,6 +54,28 @@ public class UserController {
         } else {
             throw new NotFoundException();
         }
+    }
+
+    @GetMapping("/userFavorites/{id}")
+    public ResponseEntity<Map<String, Iterable<Recipes>>> getUserFavorites(@PathVariable("id") int id) {
+        Set<Recipes> favRecipes = repository.getUserFavorites(id);
+        Map result = new HashMap();
+        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), favRecipes);
+        return new ResponseEntity<Map<String, Iterable<Recipes>>>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/addFavorite")
+    public ResponseEntity addFavorites(@RequestBody UserContext userContext) {
+        Recipes recipes = userContext.getRecipe();
+        Users users = userContext.getUser();
+
+        users.getUser_favorites().add(recipes);
+        System.out.println("USER ID ----------> " + recipes.getId());
+        repository.save(users);
+
+        Map result = new HashMap();
+        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
+        return new ResponseEntity(result, HttpStatus.CREATED);
     }
 
 }

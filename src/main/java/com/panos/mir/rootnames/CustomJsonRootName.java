@@ -10,4 +10,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface CustomJsonRootName {
     String users();
     String recipes();
+    String ingredients();
 }

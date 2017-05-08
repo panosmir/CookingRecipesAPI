@@ -1,6 +1,8 @@
 package com.panos.mir.model;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -12,7 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "ingredients")
 public class Ingredients {
-    @Column(name = "id")
+    @Column(name = "ingredients_id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -21,14 +23,15 @@ public class Ingredients {
     private String ingredient;
 
     @ManyToMany(mappedBy = "ingredients")
+//    @JsonBackReference
     private Set<Recipes> recipes = new HashSet<>();
 
-    public Ingredients() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+//    @JsonManagedReference
+    private Categories category;
 
-    public Ingredients(int id, String ingredient) {
-        this.id = id;
-        this.ingredient = ingredient;
+    public Ingredients() {
     }
 
     public int getId() {
@@ -47,4 +50,16 @@ public class Ingredients {
         this.ingredient = ingredient;
     }
 
+    public void setCategory(Categories category) {
+        this.category = category;
+    }
+
+    @JsonIgnore
+    public Set<Recipes> getRecipes() {
+        return recipes;
+    }
+
+    public Categories getCategory() {
+        return category;
+    }
 }

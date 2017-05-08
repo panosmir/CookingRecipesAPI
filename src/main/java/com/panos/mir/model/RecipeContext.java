@@ -6,22 +6,22 @@ import java.util.Set;
  * Created by Panos on 5/2/2017.
  */
 public class RecipeContext {
-    private Set<Recipes> recipes;
+    private Recipes recipes;
     private Set<Ingredients> ingredients;
 
-    public RecipeContext() {
-    }
-
-    public RecipeContext(Set<Recipes> recipes, Set<Ingredients> ingredients) {
+    public RecipeContext(Recipes recipes, Set<Ingredients> ingredients) {
         this.recipes = recipes;
         this.ingredients = ingredients;
     }
 
-    public Set<Recipes> getRecipes() {
+    public RecipeContext() {
+    }
+
+    public Recipes getRecipes() {
         return recipes;
     }
 
-    public void setRecipes(Set<Recipes> recipes) {
+    public void setRecipes(Recipes recipes) {
         this.recipes = recipes;
     }
 

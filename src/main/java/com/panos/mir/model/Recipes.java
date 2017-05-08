@@ -1,6 +1,6 @@
 package com.panos.mir.model;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -10,7 +10,7 @@ import java.util.Set;
 @Table(name = "recipes")
 public class Recipes {
 
-    @Column(name = "id")
+    @Column(name = "recipes_id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -23,28 +23,19 @@ public class Recipes {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+//    @JsonManagedReference
     private Users user;
 
     @ManyToMany(mappedBy = "user_favorites")
-    private Set<Users> users;
+//    @JsonBackReference
+    private Set<Users> favorites = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "recipes_has_ingredients", joinColumns = @JoinColumn(name = "recipes_id"), inverseJoinColumns = @JoinColumn(name = "ingredients_id"))
+    @JoinTable(name = "recipes_has_ingredients",
+            joinColumns = @JoinColumn(name = "recipes_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredients_id"))
+//    @JsonManagedReference
     private Set<Ingredients> ingredients = new HashSet<>();
-
-    public Users getUser() {
-        return user;
-    }
-
-    public void setUser(Users user) {
-        this.user = user;
-    }
-
-    public Recipes(int id, String title, String description) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-    }
 
     public Recipes() {
     }
@@ -73,4 +64,17 @@ public class Recipes {
         this.description = description;
     }
 
+
+    public Set<Ingredients> getIngredients() {
+        return ingredients;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    @JsonIgnore
+    public Set<Users> getFavorites() {
+        return favorites;
+    }
 }
