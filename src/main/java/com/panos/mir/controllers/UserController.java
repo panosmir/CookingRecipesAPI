@@ -3,6 +3,7 @@ package com.panos.mir.controllers;
 import com.panos.mir.exceptions.BadRequestException;
 import com.panos.mir.model.Recipes;
 import com.panos.mir.model.UserContext;
+import com.panos.mir.repositories.RecipesRepository;
 import com.panos.mir.repositories.UserRepository;
 import com.panos.mir.exceptions.NotFoundException;
 import com.panos.mir.model.Users;
@@ -23,6 +24,9 @@ public class UserController {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private RecipesRepository mRecipesRepository;
 
     //Returns all the users (For testing purposes only)
     @GetMapping("/all")
@@ -69,13 +73,34 @@ public class UserController {
         Recipes recipes = userContext.getRecipe();
         Users users = userContext.getUser();
 
+//        recipes.getFavorites().add(users);
         users.getUser_favorites().add(recipes);
         System.out.println("USER ID ----------> " + recipes.getId());
         repository.save(users);
+//        mRecipesRepository.save(recipes);
 
         Map result = new HashMap();
         result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
         return new ResponseEntity(result, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/removeFavorite")
+    public ResponseEntity removeFavorites(@RequestBody UserContext userContext){
+        Users user = userContext.getUser();
+        Recipes recipe = userContext.getRecipe();
+
+        for (Recipes rec :
+                user.getUser_favorites()) {
+            if (rec.getTitle().equals(recipe.getTitle())){
+                if(rec.getDescription().equals(recipe.getDescription())) {
+                    user.getUser_favorites().remove(rec);
+                }
+            }
+        }
+
+        repository.save(user);
+//        mRecipesRepository.save(recipe);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

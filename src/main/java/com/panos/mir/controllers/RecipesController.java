@@ -5,6 +5,7 @@ import com.panos.mir.exceptions.NotFoundException;
 import com.panos.mir.model.*;
 import com.panos.mir.repositories.IngredientsRepository;
 import com.panos.mir.repositories.RecipesRepository;
+import com.panos.mir.repositories.UserRepository;
 import com.panos.mir.rootnames.ApiRootElementNames;
 import com.panos.mir.rootnames.CustomJsonRootName;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class RecipesController {
 
     @Autowired
     private RecipesRepository repo;
+    @Autowired
+    private UserRepository mUserRepository;
 
     //Returns all the recipes that exists on the server
     @GetMapping(path = "/all")
@@ -149,6 +152,44 @@ public class RecipesController {
         Map result = new HashMap();
         result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipesWithIngredients);
         return new ResponseEntity<Map<String, Iterable<Recipes>>>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/userFavorites/{id}")
+    public ResponseEntity<Map<String, Iterable<Recipes>>> getUserFavorites(@PathVariable("id") int id) {
+        List<Recipes> favRecipes = repo.getUserFavorites(id);
+        Map result = new HashMap();
+        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), favRecipes);
+        return new ResponseEntity<Map<String, Iterable<Recipes>>>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("userFavorites/add")
+    public ResponseEntity addFavorites(@RequestBody UserContext userContext) {
+        Recipes recipes = userContext.getRecipe();
+        Users users = userContext.getUser();
+
+        recipes.getFavorites().add(users);
+        repo.save(recipes);
+        mUserRepository.save(users);
+        Map result = new HashMap();
+        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
+        return new ResponseEntity(result, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/removeFavorite")
+    public ResponseEntity removeFavorites(@RequestBody UserContext userContext){
+        Users user = userContext.getUser();
+        Recipes recipe = userContext.getRecipe();
+
+        for (Users u :
+                recipe.getFavorites()) {
+            if (u.getUsername().equals(user.getUsername())){
+                recipe.getFavorites().remove(u);
+            }
+        }
+
+        repo.save(recipe);
+        mUserRepository.save(user);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

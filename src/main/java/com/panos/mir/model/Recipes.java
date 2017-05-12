@@ -64,7 +64,6 @@ public class Recipes {
         this.description = description;
     }
 
-
     public Set<Ingredients> getIngredients() {
         return ingredients;
     }
@@ -73,7 +72,6 @@ public class Recipes {
         return user;
     }
 
-    @JsonIgnore
     public Set<Users> getFavorites() {
         return favorites;
     }
