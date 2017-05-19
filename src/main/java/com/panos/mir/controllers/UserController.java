@@ -68,39 +68,4 @@ public class UserController {
         return new ResponseEntity<Map<String, Iterable<Recipes>>>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/addFavorite")
-    public ResponseEntity addFavorites(@RequestBody UserContext userContext) {
-        Recipes recipes = userContext.getRecipe();
-        Users users = userContext.getUser();
-
-//        recipes.getFavorites().add(users);
-        users.getUser_favorites().add(recipes);
-        System.out.println("USER ID ----------> " + recipes.getId());
-        repository.save(users);
-//        mRecipesRepository.save(recipes);
-
-        Map result = new HashMap();
-        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
-        return new ResponseEntity(result, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/removeFavorite")
-    public ResponseEntity removeFavorites(@RequestBody UserContext userContext){
-        Users user = userContext.getUser();
-        Recipes recipe = userContext.getRecipe();
-
-        for (Recipes rec :
-                user.getUser_favorites()) {
-            if (rec.getTitle().equals(recipe.getTitle())){
-                if(rec.getDescription().equals(recipe.getDescription())) {
-                    user.getUser_favorites().remove(rec);
-                }
-            }
-        }
-
-        repository.save(user);
-//        mRecipesRepository.save(recipe);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
 }

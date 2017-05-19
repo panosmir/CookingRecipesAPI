@@ -11,4 +11,6 @@ public @interface CustomJsonRootName {
     String users();
     String recipes();
     String ingredients();
+    String categories();
+    String category();
 }

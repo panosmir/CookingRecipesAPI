@@ -8,19 +8,23 @@ import com.panos.mir.repositories.RecipesRepository;
 import com.panos.mir.repositories.UserRepository;
 import com.panos.mir.rootnames.ApiRootElementNames;
 import com.panos.mir.rootnames.CustomJsonRootName;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PreRemove;
 import java.util.*;
-
-/**
- * Created by Panos on 3/21/2017.
- */
-
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(path = "/recipes")
@@ -30,6 +34,9 @@ public class RecipesController {
     private RecipesRepository repo;
     @Autowired
     private UserRepository mUserRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     //Returns all the recipes that exists on the server
     @GetMapping(path = "/all")
@@ -162,34 +169,53 @@ public class RecipesController {
         return new ResponseEntity<Map<String, Iterable<Recipes>>>(result, HttpStatus.OK);
     }
 
-    @PostMapping("userFavorites/add")
+    //// TODO: 18-May-17 Change the way the data inserts into database.
+    @PostMapping(path = "userFavorites/add")
+    @Transactional
     public ResponseEntity addFavorites(@RequestBody UserContext userContext) {
         Recipes recipes = userContext.getRecipe();
         Users users = userContext.getUser();
 
-        recipes.getFavorites().add(users);
-        repo.save(recipes);
-        mUserRepository.save(users);
-        Map result = new HashMap();
-        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
-        return new ResponseEntity(result, HttpStatus.CREATED);
+        if (mUserRepository.findFirstByUsernameAndPassword(users.getUsername(), users.getPassword()) != null) {
+            recipes.getFavorites().add(users);
+            users.getUser_favorites().add(recipes);
+
+            entityManager.merge(users);
+            entityManager.flush();
+
+            Map result = new HashMap();
+            result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
+            return new ResponseEntity(result, HttpStatus.CREATED);
+        } else {
+            throw new BadRequestException();
+        }
     }
 
     @PostMapping("/removeFavorite")
-    public ResponseEntity removeFavorites(@RequestBody UserContext userContext){
+    @Transactional
+    public ResponseEntity removeFavorites(@RequestBody UserContext userContext) {
         Users user = userContext.getUser();
         Recipes recipe = userContext.getRecipe();
+        Set<Users> favorites = new HashSet<>(recipe.getFavorites());
 
-        for (Users u :
-                recipe.getFavorites()) {
-            if (u.getUsername().equals(user.getUsername())){
-                recipe.getFavorites().remove(u);
-            }
+        if (mUserRepository.findFirstByUsernameAndPassword(user.getUsername(), user.getPassword()) != null) {
+
+            favorites.forEach(users -> {
+                if(users.equals(user)){
+                    favorites.remove(user);
+                    user.getUser_favorites().remove(recipe);
+                    entityManager.merge(user);
+                    entityManager.flush();
+                }
+            });
+
+            Map result = new HashMap();
+            result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipe);
+            return new ResponseEntity(result, HttpStatus.OK);
+
+        } else {
+            throw new BadRequestException();
         }
-
-        repo.save(recipe);
-        mUserRepository.save(user);
-        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

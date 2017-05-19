@@ -23,12 +23,10 @@ public class Ingredients {
     private String ingredient;
 
     @ManyToMany(mappedBy = "ingredients")
-//    @JsonBackReference
     private Set<Recipes> recipes = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
-//    @JsonManagedReference
     private Categories category;
 
     public Ingredients() {

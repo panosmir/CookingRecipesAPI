@@ -34,4 +34,5 @@ public interface RecipesRepository extends CrudRepository<Recipes, Integer>{
 
     @Query(value = "SELECT * FROM favorites, recipes, users WHERE users.user_id=?1 AND favorites.recipes_id=recipes.recipes_id AND favorites.user_id=users.user_id", nativeQuery = true)
     List<Recipes> getUserFavorites(@Param("id") int id);
+
 }

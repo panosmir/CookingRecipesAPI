@@ -1,8 +1,6 @@
 package com.panos.mir.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -24,13 +22,11 @@ public class Users {
     private String password;
 
     @OneToMany(mappedBy = "user")
-//    @JsonBackReference
     private Set<Recipes> recipes;
 
     @ManyToMany
     @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "recipes_id"))
-//    @JsonManagedReference
     private Set<Recipes> user_favorites = new HashSet<>();
 
     public Users() {

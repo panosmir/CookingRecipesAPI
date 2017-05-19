@@ -20,7 +20,6 @@ public class Categories {
     private String category;
 
     @OneToMany(mappedBy = "category")
-//    @JsonBackReference
     private Set<Ingredients> ingredientsSet;
 
     public Categories() {

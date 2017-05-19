@@ -23,18 +23,15 @@ public class Recipes {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-//    @JsonManagedReference
     private Users user;
 
     @ManyToMany(mappedBy = "user_favorites")
-//    @JsonBackReference
     private Set<Users> favorites = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "recipes_has_ingredients",
             joinColumns = @JoinColumn(name = "recipes_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredients_id"))
-//    @JsonManagedReference
     private Set<Ingredients> ingredients = new HashSet<>();
 
     public Recipes() {
