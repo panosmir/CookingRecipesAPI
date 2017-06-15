@@ -31,7 +31,7 @@ public class IngredientsController {
 
     @GetMapping("/all")
     public @ResponseBody
-    ResponseEntity<Map<String, Iterable<Ingredients>>> getIngredients(){
+    ResponseEntity<Map<String, Iterable<Ingredients>>> getIngredients() {
         List<Ingredients> ingredients = (List<Ingredients>) mIngredientsRepository.findAll();
         Map result = new HashMap();
         result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).ingredients(), ingredients);
@@ -39,7 +39,8 @@ public class IngredientsController {
     }
 
     @GetMapping("/findById/{id}")
-    public @ResponseBody ResponseEntity<Map<String, Ingredients>> getIngredientsById(@PathVariable("id") int id){
+    public @ResponseBody
+    ResponseEntity<Map<String, Ingredients>> getIngredientsById(@PathVariable("id") int id) {
         Ingredients ingredient = mIngredientsRepository.findOne(id);
         Map result = new HashMap();
         result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).ingredients(), ingredient);
@@ -47,7 +48,8 @@ public class IngredientsController {
     }
 
     @GetMapping("/findByTitle/{title}")
-    public @ResponseBody ResponseEntity<Map<String, Iterable<Ingredients>>> getIngredientsByTitle(@PathVariable("title") String title){
+    public @ResponseBody
+    ResponseEntity<Map<String, Iterable<Ingredients>>> getIngredientsByTitle(@PathVariable("title") String title) {
         List<Ingredients> ingredient = mIngredientsRepository.getByIngredientIsLike("%" + title + "%");
         Map result = new HashMap();
         result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).ingredients(), ingredient);
@@ -55,10 +57,20 @@ public class IngredientsController {
     }
 
     @GetMapping("/findByCategoryId/{id}")
-    public @ResponseBody ResponseEntity<Map<String, Iterable<Ingredients>>> getIngredientsByCategoryId(@PathVariable("id") int id){
+    public @ResponseBody
+    ResponseEntity<Map<String, Iterable<Ingredients>>> getIngredientsByCategoryId(@PathVariable("id") int id) {
         List<Ingredients> ingredientsList = mIngredientsRepository.findAllByCategory_Id(id);
         Map result = new HashMap();
         result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).ingredients(), ingredientsList);
         return new ResponseEntity<Map<String, Iterable<Ingredients>>>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/addQuantity/{id}/{quantity}")
+    public @ResponseBody
+    ResponseEntity<Ingredients> getIngredient(@PathVariable("id") int id, @PathVariable("quantity") String quantity) {
+        Ingredients ingredient = mIngredientsRepository.findOne(id);
+        ingredient.setQuantity(quantity);
+        mIngredientsRepository.save(ingredient);
+        return new ResponseEntity<>(ingredient, HttpStatus.OK);
     }
 }

@@ -29,6 +29,9 @@ public class Ingredients {
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private Categories category;
 
+    @Column(name = "quantity")
+    private String quantity;
+
     public Ingredients() {
     }
 
@@ -59,5 +62,13 @@ public class Ingredients {
 
     public Categories getCategory() {
         return category;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
     }
 }
