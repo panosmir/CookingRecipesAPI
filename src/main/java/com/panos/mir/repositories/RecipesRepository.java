@@ -3,6 +3,7 @@ package com.panos.mir.repositories;
 import com.panos.mir.model.Ingredients;
 import com.panos.mir.model.Recipes;
 import com.panos.mir.model.Users;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -17,7 +18,7 @@ import java.util.Set;
 /**
  * Created by Panos on 3/22/2017.
  */
-public interface RecipesRepository extends CrudRepository<Recipes, Integer>{
+public interface RecipesRepository extends JpaRepository<Recipes, Integer> {
 
     List<Recipes> findAllByTitleIsLike(String title);
 

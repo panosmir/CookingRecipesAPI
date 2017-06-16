@@ -64,13 +64,4 @@ public class IngredientsController {
         result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).ingredients(), ingredientsList);
         return new ResponseEntity<Map<String, Iterable<Ingredients>>>(result, HttpStatus.OK);
     }
-
-    @GetMapping("/addQuantity/{id}/{quantity}")
-    public @ResponseBody
-    ResponseEntity<Ingredients> getIngredient(@PathVariable("id") int id, @PathVariable("quantity") String quantity) {
-        Ingredients ingredient = mIngredientsRepository.findOne(id);
-        ingredient.setQuantity(quantity);
-        mIngredientsRepository.save(ingredient);
-        return new ResponseEntity<>(ingredient, HttpStatus.OK);
-    }
 }

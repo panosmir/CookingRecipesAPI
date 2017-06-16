@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public class Ingredients {
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private Categories category;
 
-    @Column(name = "quantity")
+    @JoinTable(name = "recipes_has_ingredients", joinColumns = @JoinColumn(name = "quantity"))
     private String quantity;
 
     public Ingredients() {
@@ -66,6 +67,10 @@ public class Ingredients {
 
     public String getQuantity() {
         return quantity;
+    }
+
+    public void setRecipes(Set<Recipes> recipes) {
+        this.recipes = recipes;
     }
 
     public void setQuantity(String quantity) {

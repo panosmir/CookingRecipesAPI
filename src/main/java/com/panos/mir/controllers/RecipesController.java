@@ -19,10 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PreRemove;
+import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -76,8 +73,8 @@ public class RecipesController {
     @PostMapping(path = "/all/userId/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Recipes> createRecipe(@RequestBody Recipes recipes) {
         if (recipes.getUser() != null) {
-            Recipes saved = repo.save(recipes);
-            return new ResponseEntity<Recipes>(saved, HttpStatus.CREATED);
+            Recipes saved = repo.saveAndFlush(recipes);
+            return new ResponseEntity<>(saved, HttpStatus.CREATED);
         } else {
             throw new BadRequestException();
         }
@@ -201,7 +198,7 @@ public class RecipesController {
         if (mUserRepository.findFirstByUsernameAndPassword(user.getUsername(), user.getPassword()) != null) {
 
             favorites.forEach(users -> {
-                if(users.equals(user)){
+                if (users.equals(user)) {
                     favorites.remove(user);
                     user.getUser_favorites().remove(recipe);
                     entityManager.merge(user);

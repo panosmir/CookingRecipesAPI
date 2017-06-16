@@ -65,11 +65,23 @@ public class Recipes {
         return ingredients;
     }
 
+    public void setIngredients(Set<Ingredients> ingredients) {
+        this.ingredients = ingredients;
+    }
+
     public Users getUser() {
         return user;
     }
 
     public Set<Users> getFavorites() {
         return favorites;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public void setFavorites(Set<Users> favorites) {
+        this.favorites = favorites;
     }
 }
