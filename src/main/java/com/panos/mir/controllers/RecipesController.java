@@ -39,7 +39,7 @@ public class RecipesController {
     @GetMapping(path = "/all")
     public @ResponseBody
     ResponseEntity<Map<String, Iterable<Recipes>>> getAllRecipes() {
-        List<Recipes> recipes = (List<Recipes>) repo.findAll();
+        List<Recipes> recipes = repo.findAll();
         Map result = new HashMap();
         result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -127,36 +127,36 @@ public class RecipesController {
         return new ResponseEntity<Map<String, Iterable<Ingredients>>>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/ingredients/add")
-    public @ResponseBody
-    ResponseEntity addIngredientsToRecipe(@RequestBody RecipeContext recipeContext) {
-        Recipes recipe = recipeContext.getRecipes();
-        Set<Ingredients> ingredients = recipeContext.getIngredients();
-
-        recipe.getIngredients().addAll(ingredients);
-        repo.save(recipe);
-        Map result = new HashMap();
-        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipe);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/ingredients/findByIngredients")
-    public @ResponseBody
-    ResponseEntity<Map<String, Iterable<Recipes>>> findRecipesByIngredients(@RequestBody Ingredients ingredient) {
-        List<Recipes> recipes = (List<Recipes>) repo.findAll();
-        List<Recipes> recipesWithIngredients = new ArrayList<>();
-        for (Recipes recipe : recipes) {
-            for (Ingredients in :
-                    recipe.getIngredients()) {
-                if (in.getIngredient().equals(ingredient.getIngredient())) {
-                    recipesWithIngredients.add(recipe);
-                }
-            }
-        }
-        Map result = new HashMap();
-        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipesWithIngredients);
-        return new ResponseEntity<Map<String, Iterable<Recipes>>>(result, HttpStatus.OK);
-    }
+//    @PostMapping("/ingredients/add")
+//    public @ResponseBody
+//    ResponseEntity addIngredientsToRecipe(@RequestBody RecipeContext recipeContext) {
+//        Recipes recipe = recipeContext.getRecipes();
+//        Set<Ingredients> ingredients = recipeContext.getIngredients();
+//
+//        recipe.getIngredients().addAll(ingredients);
+//        repo.save(recipe);
+//        Map result = new HashMap();
+//        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipe);
+//        return new ResponseEntity<>(result, HttpStatus.CREATED);
+//    }
+//
+//    @PostMapping("/ingredients/findByIngredients")
+//    public @ResponseBody
+//    ResponseEntity<Map<String, Iterable<Recipes>>> findRecipesByIngredients(@RequestBody Ingredients ingredient) {
+//        List<Recipes> recipes = (List<Recipes>) repo.findAll();
+//        List<Recipes> recipesWithIngredients = new ArrayList<>();
+//        for (Recipes recipe : recipes) {
+//            for (Ingredients in :
+//                    recipe.getIngredients()) {
+//                if (in.getIngredient().equals(ingredient.getIngredient())) {
+//                    recipesWithIngredients.add(recipe);
+//                }
+//            }
+//        }
+//        Map result = new HashMap();
+//        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipesWithIngredients);
+//        return new ResponseEntity<Map<String, Iterable<Recipes>>>(result, HttpStatus.OK);
+//    }
 
     @GetMapping("/userFavorites/{id}")
     public ResponseEntity<Map<String, Iterable<Recipes>>> getUserFavorites(@PathVariable("id") int id) {

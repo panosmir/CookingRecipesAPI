@@ -1,8 +1,11 @@
 package com.panos.mir.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.data.annotation.*;
 
 import javax.persistence.*;
+import javax.persistence.Id;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,11 +31,8 @@ public class Recipes {
     @ManyToMany(mappedBy = "user_favorites")
     private Set<Users> favorites = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "recipes_has_ingredients",
-            joinColumns = @JoinColumn(name = "recipes_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredients_id"))
-    private Set<Ingredients> ingredients = new HashSet<>();
+    @OneToMany(mappedBy = "recipe")
+    private Set<RecipeIngredients> ingredients = new HashSet<>();
 
     public Recipes() {
     }
@@ -61,11 +61,11 @@ public class Recipes {
         this.description = description;
     }
 
-    public Set<Ingredients> getIngredients() {
+    public Set<RecipeIngredients> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Set<Ingredients> ingredients) {
+    public void setIngredients(Set<RecipeIngredients> ingredients) {
         this.ingredients = ingredients;
     }
 

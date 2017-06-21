@@ -1,8 +1,11 @@
 package com.panos.mir.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.data.annotation.*;
 
 import javax.persistence.*;
+import javax.persistence.Id;
 import java.util.HashSet;
 import java.util.Set;
 
