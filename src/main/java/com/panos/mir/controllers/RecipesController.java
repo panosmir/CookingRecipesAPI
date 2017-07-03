@@ -3,15 +3,13 @@ package com.panos.mir.controllers;
 import com.panos.mir.exceptions.BadRequestException;
 import com.panos.mir.exceptions.NotFoundException;
 import com.panos.mir.model.*;
-import com.panos.mir.repositories.IngredientsRepository;
 import com.panos.mir.repositories.RecipesRepository;
 import com.panos.mir.repositories.UserRepository;
 import com.panos.mir.rootnames.ApiRootElementNames;
 import com.panos.mir.rootnames.CustomJsonRootName;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(path = "/recipes")
@@ -71,10 +69,28 @@ public class RecipesController {
 
     //Create a recipe if a user is logged in
     @PostMapping(path = "/all/userId/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Recipes> createRecipe(@RequestBody Recipes recipes) {
-        if (recipes.getUser() != null) {
-            Recipes saved = repo.saveAndFlush(recipes);
-            return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    @Transactional
+    public ResponseEntity<Recipes> createRecipe(@RequestBody Recipe recipe) {
+        if (recipe.getUser() != null) {
+
+            Recipes recipes = new Recipes();
+            if(!repo.findById(recipes.getId()).isEmpty()) {
+                recipes.setTitle(recipe.getTitle());
+                recipes.setDescription(recipe.getDescription());
+                recipes.setUser(recipe.getUser());
+                recipe.getIngredients().forEach(ingredient -> {
+                    RecipeIngredients recipeIngredients = new RecipeIngredients(recipes, ingredient, ingredient.getQuantity());
+                    recipes.getIngredients().add(recipeIngredients);
+                    entityManager.persist(recipes);
+                    entityManager.persist(recipeIngredients);
+                });
+
+                entityManager.flush();
+                Recipes saved = repo.saveAndFlush(recipes);
+
+                return new ResponseEntity<>(saved, HttpStatus.CREATED);
+            }
+            throw new BadRequestException();
         } else {
             throw new BadRequestException();
         }

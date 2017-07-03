@@ -3,12 +3,13 @@ package com.panos.mir.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "ingredients")
-public class Ingredients {
+public class Ingredients implements Serializable{
     @Column(name = "ingredients_id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,6 +24,8 @@ public class Ingredients {
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private Categories category;
+
+    private String quantity;
 
     public Ingredients() {
     }
@@ -58,5 +61,13 @@ public class Ingredients {
 
     public Categories getCategory() {
         return category;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
     }
 }

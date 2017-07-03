@@ -11,9 +11,7 @@ import org.springframework.data.annotation.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Created by Panos on 21-Jun-17.
- */
+
 @Entity
 @Table(name = "recipes_has_ingredients")
 public class RecipeIngredients {
@@ -55,6 +53,7 @@ public class RecipeIngredients {
 
         recipe.getIngredients().add(this);
         ingredient.getRecipes().add(this);
+
     }
 
     public RecipeIngredients() {

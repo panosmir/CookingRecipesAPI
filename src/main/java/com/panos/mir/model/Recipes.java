@@ -1,21 +1,17 @@
 package com.panos.mir.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.data.annotation.*;
-
 import javax.persistence.*;
-import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 @Entity
 @Table(name = "recipes")
-public class Recipes {
+public class Recipes implements Serializable{
 
     @Column(name = "recipes_id")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column(name = "title")
@@ -35,6 +31,7 @@ public class Recipes {
     private Set<RecipeIngredients> ingredients = new HashSet<>();
 
     public Recipes() {
+        id = new Random().nextInt(2000) + 1;
     }
 
     public int getId() {
