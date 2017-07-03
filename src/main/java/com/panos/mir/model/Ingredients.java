@@ -25,6 +25,7 @@ public class Ingredients implements Serializable{
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private Categories category;
 
+    @Column(name = "quantity")
     private String quantity;
 
     public Ingredients() {
@@ -63,6 +64,7 @@ public class Ingredients implements Serializable{
         return category;
     }
 
+    @JsonIgnore
     public String getQuantity() {
         return quantity;
     }
