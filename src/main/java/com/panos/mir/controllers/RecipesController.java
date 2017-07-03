@@ -74,7 +74,7 @@ public class RecipesController {
         if (recipe.getUser() != null) {
 
             Recipes recipes = new Recipes();
-            if(!repo.findById(recipes.getId()).isEmpty()) {
+            if(repo.findById(recipes.getId()).isEmpty()) {
                 recipes.setTitle(recipe.getTitle());
                 recipes.setDescription(recipe.getDescription());
                 recipes.setUser(recipe.getUser());
