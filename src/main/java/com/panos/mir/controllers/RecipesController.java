@@ -10,6 +10,7 @@ import com.panos.mir.rootnames.CustomJsonRootName;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -73,7 +74,7 @@ public class RecipesController {
     public ResponseEntity<Recipes> createRecipe(@RequestBody Recipe recipe) {
         if (recipe.getUser() != null) {
 
-            Recipes recipes = new Recipes();
+            Recipes recipes = new Recipes(true);
             if(repo.findById(recipes.getId()).isEmpty()) {
                 recipes.setTitle(recipe.getTitle());
                 recipes.setDescription(recipe.getDescription());
@@ -111,6 +112,7 @@ public class RecipesController {
     }
 
     @DeleteMapping(path = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
     public @ResponseBody
     ResponseEntity<Map<String, Iterable<Recipes>>> deleteRecipe(@RequestBody Recipes recipes) {
         if (repo.findRecipesByUserAndId(recipes.getUser().getUser_id(), recipes.getId()) != null) {
@@ -122,13 +124,27 @@ public class RecipesController {
     }
 
     @PutMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @Modifying
     public @ResponseBody
-    ResponseEntity<Recipes> updateRecipe(@RequestBody Recipes recipe) {
+    ResponseEntity<Recipes> updateRecipe(@RequestBody Recipe recipe) {
         if (repo.findRecipesByUserAndId(recipe.getUser().getUser_id(), recipe.getId()) != null) {
-            Recipes updatedRecipe = repo.save(recipe);
+            Recipes recipes = new Recipes(false);
+            recipes.setTitle(recipe.getTitle());
+            recipes.setDescription(recipe.getDescription());
+            recipes.setUser(recipe.getUser());
+            recipe.getIngredients().forEach(ingredient -> {
+                RecipeIngredients recipeIngredients = new RecipeIngredients(recipes, ingredient, ingredient.getQuantity());
+                recipes.getIngredients().add(recipeIngredients);
+                entityManager.merge(recipeIngredients);
+            });
+
+            entityManager.flush();
+
+            Recipes updatedRecipe = repo.saveAndFlush(recipes);
             Map result = new HashMap();
             result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), updatedRecipe);
-            return new ResponseEntity<>(recipe, HttpStatus.CREATED);
+            return new ResponseEntity<>(recipes, HttpStatus.CREATED);
         } else {
             throw new BadRequestException();
         }

@@ -64,7 +64,6 @@ public class Ingredients implements Serializable{
         return category;
     }
 
-    @JsonIgnore
     public String getQuantity() {
         return quantity;
     }

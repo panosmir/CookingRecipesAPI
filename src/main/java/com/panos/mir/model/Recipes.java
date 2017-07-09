@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "recipes")
-public class Recipes implements Serializable{
+public class Recipes implements Serializable {
 
     @Column(name = "recipes_id")
     @Id
@@ -30,8 +30,9 @@ public class Recipes implements Serializable{
     @OneToMany(mappedBy = "recipe")
     private Set<RecipeIngredients> ingredients = new HashSet<>();
 
-    public Recipes() {
-        id = new Random().nextInt(2000) + 1;
+    public Recipes(boolean withId) {
+        if (withId)
+            id = new Random().nextInt(2000) + 1;
     }
 
     public int getId() {

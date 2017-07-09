@@ -1,9 +1,7 @@
 package com.panos.mir.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.DeserializationConfig;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.data.annotation.*;
@@ -77,6 +75,7 @@ public class RecipeIngredients {
         this.recipe = recipe;
     }
 
+    @JsonUnwrapped
     public Ingredients getIngredient() {
         return ingredient;
     }
