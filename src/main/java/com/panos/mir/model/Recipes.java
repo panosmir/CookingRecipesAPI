@@ -35,6 +35,8 @@ public class Recipes implements Serializable {
             id = new Random().nextInt(2000) + 1;
     }
 
+    public Recipes(){}
+
     public int getId() {
         return id;
     }

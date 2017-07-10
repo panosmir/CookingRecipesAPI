@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -124,26 +125,30 @@ public class RecipesController {
     }
 
     @PutMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Transactional
-    @Modifying
+    @Transactional(propagation = Propagation.REQUIRED)
     public @ResponseBody
     ResponseEntity<Recipes> updateRecipe(@RequestBody Recipe recipe) {
         if (repo.findRecipesByUserAndId(recipe.getUser().getUser_id(), recipe.getId()) != null) {
             Recipes recipes = new Recipes(false);
+            recipes.setId(recipe.getId());
             recipes.setTitle(recipe.getTitle());
             recipes.setDescription(recipe.getDescription());
             recipes.setUser(recipe.getUser());
+
+            repo.delete(recipes);
+
             recipe.getIngredients().forEach(ingredient -> {
                 RecipeIngredients recipeIngredients = new RecipeIngredients(recipes, ingredient, ingredient.getQuantity());
                 recipes.getIngredients().add(recipeIngredients);
-                entityManager.merge(recipeIngredients);
+                entityManager.persist(recipes);
+                entityManager.persist(recipeIngredients);
             });
-
+//            repo.save(recipes);
             entityManager.flush();
+//            entityManager.merge(recipes);
 
-            Recipes updatedRecipe = repo.saveAndFlush(recipes);
             Map result = new HashMap();
-            result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), updatedRecipe);
+            result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
             return new ResponseEntity<>(recipes, HttpStatus.CREATED);
         } else {
             throw new BadRequestException();
