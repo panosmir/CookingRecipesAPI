@@ -7,14 +7,10 @@ import com.panos.mir.repositories.RecipesRepository;
 import com.panos.mir.repositories.UserRepository;
 import com.panos.mir.rootnames.ApiRootElementNames;
 import com.panos.mir.rootnames.CustomJsonRootName;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.*;
 
-@Controller
+@RestController
 @RequestMapping(path = "/recipes")
 public class RecipesController {
 
@@ -163,37 +159,6 @@ public class RecipesController {
         result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), ingredients);
         return new ResponseEntity<Map<String, Iterable<Ingredients>>>(result, HttpStatus.OK);
     }
-
-//    @PostMapping("/ingredients/add")
-//    public @ResponseBody
-//    ResponseEntity addIngredientsToRecipe(@RequestBody RecipeContext recipeContext) {
-//        Recipes recipe = recipeContext.getRecipes();
-//        Set<Ingredients> ingredients = recipeContext.getIngredients();
-//
-//        recipe.getIngredients().addAll(ingredients);
-//        repo.save(recipe);
-//        Map result = new HashMap();
-//        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipe);
-//        return new ResponseEntity<>(result, HttpStatus.CREATED);
-//    }
-//
-//    @PostMapping("/ingredients/findByIngredients")
-//    public @ResponseBody
-//    ResponseEntity<Map<String, Iterable<Recipes>>> findRecipesByIngredients(@RequestBody Ingredients ingredient) {
-//        List<Recipes> recipes = (List<Recipes>) repo.findAll();
-//        List<Recipes> recipesWithIngredients = new ArrayList<>();
-//        for (Recipes recipe : recipes) {
-//            for (Ingredients in :
-//                    recipe.getIngredients()) {
-//                if (in.getIngredient().equals(ingredient.getIngredient())) {
-//                    recipesWithIngredients.add(recipe);
-//                }
-//            }
-//        }
-//        Map result = new HashMap();
-//        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipesWithIngredients);
-//        return new ResponseEntity<Map<String, Iterable<Recipes>>>(result, HttpStatus.OK);
-//    }
 
     @GetMapping("/userFavorites/{id}")
     public ResponseEntity<Map<String, Iterable<Recipes>>> getUserFavorites(@PathVariable("id") int id) {

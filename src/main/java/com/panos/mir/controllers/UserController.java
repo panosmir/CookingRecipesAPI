@@ -1,14 +1,13 @@
 package com.panos.mir.controllers;
 
 import com.panos.mir.exceptions.BadRequestException;
+import com.panos.mir.exceptions.NotFoundException;
 import com.panos.mir.model.Recipes;
-import com.panos.mir.model.UserContext;
+import com.panos.mir.model.Users;
 import com.panos.mir.repositories.RecipesRepository;
 import com.panos.mir.repositories.UserRepository;
-import com.panos.mir.exceptions.NotFoundException;
-import com.panos.mir.model.Users;
-import com.panos.mir.rootnames.CustomJsonRootName;
 import com.panos.mir.rootnames.ApiRootElementNames;
+import com.panos.mir.rootnames.CustomJsonRootName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,9 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-@Controller
+@RestController
 @RequestMapping(path = "/users")
 public class UserController {
 
