@@ -1,18 +1,17 @@
 package com.panos.mir.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 @Entity
 @Table(name = "recipes")
-public class Recipes {
+public class Recipes implements Serializable {
 
     @Column(name = "recipes_id")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column(name = "title")
@@ -28,14 +27,15 @@ public class Recipes {
     @ManyToMany(mappedBy = "user_favorites")
     private Set<Users> favorites = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "recipes_has_ingredients",
-            joinColumns = @JoinColumn(name = "recipes_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredients_id"))
-    private Set<Ingredients> ingredients = new HashSet<>();
+    @OneToMany(mappedBy = "recipe")
+    private Set<RecipeIngredients> ingredients = new HashSet<>();
 
-    public Recipes() {
+    public Recipes(boolean withId) {
+        if (withId)
+            id = new Random().nextInt(2000) + 1;
     }
+
+    public Recipes(){}
 
     public int getId() {
         return id;
@@ -61,11 +61,11 @@ public class Recipes {
         this.description = description;
     }
 
-    public Set<Ingredients> getIngredients() {
+    public Set<RecipeIngredients> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Set<Ingredients> ingredients) {
+    public void setIngredients(Set<RecipeIngredients> ingredients) {
         this.ingredients = ingredients;
     }
 

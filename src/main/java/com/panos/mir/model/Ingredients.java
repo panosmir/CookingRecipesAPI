@@ -1,20 +1,15 @@
 package com.panos.mir.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by Panos on 5/2/2017.
- */
 @Entity
 @Table(name = "ingredients")
-public class Ingredients {
+public class Ingredients implements Serializable{
     @Column(name = "ingredients_id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,14 +18,14 @@ public class Ingredients {
     @Column(name = "ingredient")
     private String ingredient;
 
-    @ManyToMany(mappedBy = "ingredients")
-    private Set<Recipes> recipes = new HashSet<>();
+    @OneToMany(mappedBy = "ingredient")
+    private Set<RecipeIngredients> recipes = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private Categories category;
 
-    @JoinTable(name = "recipes_has_ingredients", joinColumns = @JoinColumn(name = "quantity"))
+    @Column(name = "quantity")
     private String quantity;
 
     public Ingredients() {
@@ -57,8 +52,12 @@ public class Ingredients {
     }
 
     @JsonIgnore
-    public Set<Recipes> getRecipes() {
+    public Set<RecipeIngredients> getRecipes() {
         return recipes;
+    }
+
+    public void setRecipes(Set<RecipeIngredients> recipes) {
+        this.recipes = recipes;
     }
 
     public Categories getCategory() {
@@ -67,10 +66,6 @@ public class Ingredients {
 
     public String getQuantity() {
         return quantity;
-    }
-
-    public void setRecipes(Set<Recipes> recipes) {
-        this.recipes = recipes;
     }
 
     public void setQuantity(String quantity) {

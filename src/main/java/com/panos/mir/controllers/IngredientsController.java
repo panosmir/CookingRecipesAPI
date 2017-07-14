@@ -1,28 +1,19 @@
 package com.panos.mir.controllers;
 
 import com.panos.mir.model.Ingredients;
-import com.panos.mir.model.RecipeContext;
-import com.panos.mir.model.Recipes;
 import com.panos.mir.repositories.IngredientsRepository;
 import com.panos.mir.rootnames.ApiRootElementNames;
 import com.panos.mir.rootnames.CustomJsonRootName;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-/**
- * Created by Panos on 5/2/2017.
- */
-@Controller
+@RestController
 @RequestMapping("/ingredients")
 public class IngredientsController {
 
