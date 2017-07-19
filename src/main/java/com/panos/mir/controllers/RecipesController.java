@@ -111,6 +111,7 @@ public class RecipesController {
         }
     }
 
+    //This code needs to be fixed and then move it to recipesService. This will take place after the ver 1.0 release.
     //// TODO: 17-Jul-17 To be fixed because now there is CompositeKey Table.
     @GetMapping("/ingredients/{recipe_id}")
     public @ResponseBody

@@ -4,6 +4,7 @@ import com.panos.mir.model.Categories;
 import com.panos.mir.repositories.CategoryRepository;
 import com.panos.mir.rootnames.ApiRootElementNames;
 import com.panos.mir.rootnames.CustomJsonRootName;
+import com.panos.mir.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,20 +21,19 @@ public class CategoriesController {
     @Autowired
     private CategoryRepository mCategoryRepository;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @GetMapping("/all")
     public @ResponseBody
     ResponseEntity<Map<String, Iterable<Categories>>> getAllCategories(){
-        List<Categories> categories = (List<Categories>) mCategoryRepository.findAll();
-        Map result = new HashMap();
-        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).categories(), categories);
+        Map result = categoryService.findAllCategories();
         return new ResponseEntity<Map<String, Iterable<Categories>>>(result, HttpStatus.OK);
     }
 
     @GetMapping("/findById/{id}")
     public @ResponseBody ResponseEntity<Map<String, Categories>> getCategoryById(@PathVariable("id") int id){
-        Categories category = mCategoryRepository.findOne(id);
-        Map result = new HashMap();
-        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).categories(), category);
+        Map result = categoryService.findCategoryById(id);
         return new ResponseEntity<Map<String, Categories>>(result, HttpStatus.OK);
     }
 }
