@@ -34,14 +34,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    //Returns all the users (For testing purposes only)
-    @GetMapping("/all")
-    public @ResponseBody
-    ResponseEntity<Map<String, Iterable<Users>>> getUsers() {
-        Map result = userService.getUsers();
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
     //Register a user
     @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Users> create(@RequestBody Users user) {

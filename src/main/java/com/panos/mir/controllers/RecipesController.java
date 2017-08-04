@@ -44,16 +44,6 @@ public class RecipesController {
         return new ResponseEntity<Map<String, Iterable<Recipes>>>(recipes, HttpStatus.OK);
     }
 
-    //Returns recipes by id (for testing purposes only)
-    @GetMapping(path = "/all/{id}")
-    public @ResponseBody
-    ResponseEntity<Map<String, Recipes>> findRecipe(@PathVariable("id") int id) {
-        List<Recipes> recipes = repo.findById(id);
-        Map result = new HashMap();
-        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
     //Returns recipes by userId. Recipes that a user created.
     @GetMapping(path = "/all/userId/{id}")
     public @ResponseBody
