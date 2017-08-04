@@ -2,6 +2,7 @@ package com.panos.mir.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.*;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Users {
     private String username;
 
     @Column(name = "password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @OneToMany(mappedBy = "user")

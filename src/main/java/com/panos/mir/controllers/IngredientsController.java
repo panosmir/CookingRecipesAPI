@@ -4,6 +4,7 @@ import com.panos.mir.model.Ingredients;
 import com.panos.mir.repositories.IngredientsRepository;
 import com.panos.mir.rootnames.ApiRootElementNames;
 import com.panos.mir.rootnames.CustomJsonRootName;
+import com.panos.mir.service.IngredientsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,10 @@ public class IngredientsController {
     @Autowired
     private IngredientsRepository mIngredientsRepository;
 
+    @Autowired
+    private IngredientsService ingredientsService;
+
+    //Every other function probably will be removed due to no usage.
     @GetMapping("/all")
     public @ResponseBody
     ResponseEntity<Map<String, Iterable<Ingredients>>> getIngredients() {
@@ -50,9 +55,7 @@ public class IngredientsController {
     @GetMapping("/findByCategoryId/{id}")
     public @ResponseBody
     ResponseEntity<Map<String, Iterable<Ingredients>>> getIngredientsByCategoryId(@PathVariable("id") int id) {
-        List<Ingredients> ingredientsList = mIngredientsRepository.findAllByCategory_Id(id);
-        Map result = new HashMap();
-        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).ingredients(), ingredientsList);
+        Map result = ingredientsService.findIngredientsByCategoryId(id);
         return new ResponseEntity<Map<String, Iterable<Ingredients>>>(result, HttpStatus.OK);
     }
 }
