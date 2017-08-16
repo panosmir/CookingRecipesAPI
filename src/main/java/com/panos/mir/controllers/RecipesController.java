@@ -121,48 +121,43 @@ public class RecipesController {
     }
 
     //// TODO: 18-May-17 Change the way the data inserts into database.
-    @PostMapping(path = "userFavorites/add")
+    @GetMapping(path = "userFavorites/add/{id}/{username}")
     @Transactional
-    public ResponseEntity addFavorites(@RequestBody UserContext userContext) {
-        Recipes recipes = userContext.getRecipe();
-        Users users = userContext.getUser();
+    public ResponseEntity addFavorites(@PathVariable int id, @PathVariable String username) {
 
-        if (mUserRepository.findFirstByUsernameAndPassword(users.getUsername(), users.getPassword()) != null) {
+
+        if (mUserRepository.findFirstByUsername(username) != null && repo.findById(id)!=null) {
+
+            Recipes recipes = repo.findById(id);
+            Users users = mUserRepository.findFirstByUsername(username);
+
             recipes.getFavorites().add(users);
             users.getUser_favorites().add(recipes);
+            repo.save(recipes);
+            mUserRepository.save(users);
 
-            entityManager.merge(users);
-            entityManager.flush();
-
-            Map result = new HashMap();
-            result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
-            return new ResponseEntity(result, HttpStatus.CREATED);
+            return new ResponseEntity(HttpStatus.CREATED);
         } else {
             throw new BadRequestException();
         }
     }
 
-    @PostMapping("/removeFavorite")
+    @GetMapping("/removeFavorite")
     @Transactional
-    public ResponseEntity removeFavorites(@RequestBody UserContext userContext) {
-        Users user = userContext.getUser();
-        Recipes recipe = userContext.getRecipe();
-        Set<Users> favorites = new HashSet<>(recipe.getFavorites());
+    public ResponseEntity removeFavorites(@RequestParam int id, @RequestParam String username) {
 
-        if (mUserRepository.findFirstByUsernameAndPassword(user.getUsername(), user.getPassword()) != null) {
 
-            favorites.forEach(users -> {
-                if (users.equals(user)) {
-                    favorites.remove(user);
-                    user.getUser_favorites().remove(recipe);
-                    entityManager.merge(user);
-                    entityManager.flush();
-                }
-            });
+        if (mUserRepository.findFirstByUsername(username) != null && repo.findById(id)!=null) {
 
-            Map result = new HashMap();
-            result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipe);
-            return new ResponseEntity(result, HttpStatus.OK);
+            Recipes recipes = repo.findById(id);
+            Users users = mUserRepository.findFirstByUsername(username);
+
+            recipes.getFavorites().remove(users);
+            users.getUser_favorites().remove(recipes);
+            repo.save(recipes);
+            mUserRepository.save(users);
+
+            return new ResponseEntity(HttpStatus.OK);
 
         } else {
             throw new BadRequestException();

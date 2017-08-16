@@ -29,9 +29,7 @@ public class Users {
     @OneToMany(mappedBy = "user")
     private Set<Recipes> recipes;
 
-    @ManyToMany
-    @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "recipes_id"))
+    @ManyToMany(mappedBy = "favorites")
     private Set<Recipes> user_favorites = new HashSet<>();
 
     public Users() {

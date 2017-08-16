@@ -1,5 +1,6 @@
 package com.panos.mir.service;
 
+import com.panos.mir.model.Ingredients;
 import com.panos.mir.model.Recipe;
 import com.panos.mir.model.RecipeIngredients;
 import com.panos.mir.model.Recipes;
@@ -43,12 +44,16 @@ public class RecipesService {
         Recipes saved = new Recipes(false);
         if (recipe.getUser() != null) {
             Recipes recipes = new Recipes(true);
-            if (repo.findById(recipes.getId()).isEmpty()) {
+            if (repo.findById(recipes.getId())!=null) {
                 recipes.setTitle(recipe.getTitle());
                 recipes.setDescription(recipe.getDescription());
                 recipes.setUser(recipe.getUser());
                 recipe.getIngredients().forEach(ingredient -> {
-                    RecipeIngredients recipeIngredients = new RecipeIngredients(recipes, ingredient, ingredient.getQuantity());
+                    Ingredients ingredients = new Ingredients();
+                    ingredients.setId(ingredient.getId());
+                    ingredients.setIngredient(ingredient.getIngredient());
+                    ingredients.setCategory(ingredient.getCategories());
+                    RecipeIngredients recipeIngredients = new RecipeIngredients(recipes, ingredients, ingredient.getQuantity());
                     recipes.getIngredients().add(recipeIngredients);
                     entityManager.persist(recipes);
                     entityManager.persist(recipeIngredients);
@@ -87,7 +92,11 @@ public class RecipesService {
             repo.delete(recipes);
 
             recipe.getIngredients().forEach(ingredient -> {
-                RecipeIngredients recipeIngredients = new RecipeIngredients(recipes, ingredient, ingredient.getQuantity());
+                Ingredients ingredients = new Ingredients();
+                ingredients.setId(ingredient.getId());
+                ingredients.setIngredient(ingredient.getIngredient());
+                ingredients.setCategory(ingredient.getCategories());
+                RecipeIngredients recipeIngredients = new RecipeIngredients(recipes, ingredients, ingredient.getQuantity());
                 recipes.getIngredients().add(recipeIngredients);
                 entityManager.persist(recipes);
                 entityManager.persist(recipeIngredients);

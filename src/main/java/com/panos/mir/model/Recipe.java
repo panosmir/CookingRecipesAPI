@@ -9,7 +9,7 @@ public class Recipe {
     private String title;
     private String description;
     private Users user;
-    private Set<Ingredients> ingredients = new HashSet<>();
+    private Set<IngredientDTO> ingredients = new HashSet<>();
 
     public Recipe(int id, String title, String description) {
         this.id = id;
@@ -52,11 +52,11 @@ public class Recipe {
         this.user = user;
     }
 
-    public Set<Ingredients> getIngredients() {
+    public Set<IngredientDTO> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Set<Ingredients> ingredients) {
+    public void setIngredients(Set<IngredientDTO> ingredients) {
         this.ingredients = ingredients;
     }
 }

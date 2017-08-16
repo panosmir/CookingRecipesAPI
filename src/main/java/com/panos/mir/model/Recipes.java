@@ -24,7 +24,9 @@ public class Recipes implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private Users user;
 
-    @ManyToMany(mappedBy = "user_favorites")
+    @ManyToMany
+    @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "recipes_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<Users> favorites = new HashSet<>();
 
     @OneToMany(mappedBy = "recipe")
@@ -35,7 +37,8 @@ public class Recipes implements Serializable {
             id = new Random().nextInt(2000) + 1;
     }
 
-    public Recipes(){}
+    public Recipes() {
+    }
 
     public int getId() {
         return id;

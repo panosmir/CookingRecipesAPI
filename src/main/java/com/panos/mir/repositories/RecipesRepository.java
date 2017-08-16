@@ -22,7 +22,7 @@ public interface RecipesRepository extends JpaRepository<Recipes, Integer> {
 
     List<Recipes> findAllByTitleIsLike(String title);
 
-    List<Recipes> findById(int id);
+    Recipes findById(int id);
 
     @Query(value = "SELECT * FROM recipes WHERE user_id=?1", nativeQuery = true)
     List<Recipes> findAllByUserUser_id(int id);
