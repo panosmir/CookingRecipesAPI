@@ -72,7 +72,7 @@ public class RecipesController {
     public @ResponseBody
     ResponseEntity<Map<String, Iterable<Recipes>>> getRecipesByTitle(@PathVariable("title") String title) {
         Map recipes = recipesService.findRecipesByTitle(title);
-        if (!recipes.isEmpty()) {
+        if (recipes != null) {
             return new ResponseEntity<Map<String, Iterable<Recipes>>>(recipes, HttpStatus.OK);
         } else
             throw new NotFoundException();

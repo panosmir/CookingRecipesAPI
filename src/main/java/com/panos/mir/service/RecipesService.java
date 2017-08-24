@@ -44,7 +44,7 @@ public class RecipesService {
         Recipes saved = new Recipes(false);
         if (recipe.getUser() != null) {
             Recipes recipes = new Recipes(true);
-            if (repo.findById(recipes.getId())!=null) {
+            if (repo.findById(recipes.getId()) != null) {
                 recipes.setTitle(recipe.getTitle());
                 recipes.setDescription(recipe.getDescription());
                 recipes.setUser(recipe.getUser());
@@ -67,17 +67,20 @@ public class RecipesService {
 
     public Map<String, Iterable<Recipes>> findRecipesByTitle(String title) {
         List<Recipes> recipes = repo.findAllByTitleIsLike("%" + title + "%");
-        Map result = new HashMap();
-        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
-        return result;
-    }
-
-    public Boolean deleteRecipe(Recipes recipe){
-        if(repo.findRecipesByUserAndId(recipe.getUser().getUser_id(), recipe.getId()) !=null ){
-            repo.delete(recipe);
-            return true;
+        if (!recipes.isEmpty()) {
+            Map result = new HashMap();
+            result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
+            return result;
         }
         else
+            return null;
+    }
+
+    public Boolean deleteRecipe(Recipes recipe) {
+        if (repo.findRecipesByUserAndId(recipe.getUser().getUser_id(), recipe.getId()) != null) {
+            repo.delete(recipe);
+            return true;
+        } else
             return null;
     }
 
