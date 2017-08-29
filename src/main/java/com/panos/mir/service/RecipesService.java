@@ -26,6 +26,9 @@ public class RecipesService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    private Recipes recipes;
+
+
     public Map<String, Iterable<Recipes>> getAllRecipes() {
         List<Recipes> recipes = repo.findAll();
         Map result = new HashMap();
@@ -41,10 +44,9 @@ public class RecipesService {
     }
 
     public Recipes createRecipe(Recipe recipe) {
-        Recipes saved = new Recipes(false);
         if (recipe.getUser() != null) {
-            Recipes recipes = new Recipes(true);
-            if (repo.findById(recipes.getId()) != null) {
+            recipes = new Recipes(true);
+            if (repo.findById(recipes.getId()) == null) {
                 recipes.setTitle(recipe.getTitle());
                 recipes.setDescription(recipe.getDescription());
                 recipes.setUser(recipe.getUser());
@@ -58,11 +60,11 @@ public class RecipesService {
                     entityManager.persist(recipes);
                     entityManager.persist(recipeIngredients);
                 });
+//                entityManager.merge(recipes);
                 entityManager.flush();
-                saved = repo.saveAndFlush(recipes);
             }
         }
-        return saved;
+        return recipes;
     }
 
     public Map<String, Iterable<Recipes>> findRecipesByTitle(String title) {
@@ -71,8 +73,7 @@ public class RecipesService {
             Map result = new HashMap();
             result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
             return result;
-        }
-        else
+        } else
             return null;
     }
 
