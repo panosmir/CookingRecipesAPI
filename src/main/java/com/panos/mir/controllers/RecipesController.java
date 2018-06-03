@@ -8,7 +8,6 @@ import com.panos.mir.repositories.UserRepository;
 import com.panos.mir.rootnames.ApiRootElementNames;
 import com.panos.mir.rootnames.CustomJsonRootName;
 import com.panos.mir.service.RecipesService;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -56,10 +55,9 @@ public class RecipesController {
         }
     }
 
-    //Create a recipe if a user is logged in
-    @PostMapping(path = "/all/userId/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/all/userId/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public ResponseEntity<Recipes> createRecipe(@RequestBody Recipe recipe) {
+    public ResponseEntity<Recipes> createRecipe(@RequestBody RecipeDTO recipe) {
         Recipes saved = recipesService.createRecipe(recipe);
         if (saved != null)
             return new ResponseEntity<>(saved, HttpStatus.CREATED);
@@ -92,7 +90,7 @@ public class RecipesController {
     @PutMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(propagation = Propagation.REQUIRED)
     public @ResponseBody
-    ResponseEntity<Recipes> updateRecipe(@RequestBody Recipe recipe) {
+    ResponseEntity<Recipes> updateRecipe(@RequestBody RecipeDTO recipe) {
         Map recipes = recipesService.updateRecipe(recipe);
         if (recipes != null) {
             return new ResponseEntity(recipes, HttpStatus.CREATED);
@@ -120,8 +118,7 @@ public class RecipesController {
         return new ResponseEntity<Map<String, Iterable<Recipes>>>(result, HttpStatus.OK);
     }
 
-    //// TODO: 18-May-17 Change the way the data inserts into database.
-    @GetMapping(path = "userFavorites/add/{id}/{username}")
+    @GetMapping(path = "userFavorites/{id}/{username}")
     @Transactional
     public ResponseEntity addFavorites(@PathVariable int id, @PathVariable String username) {
 

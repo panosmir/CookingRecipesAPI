@@ -41,7 +41,6 @@ public class UserController {
     }
 
     //Login call.
-    //// TODO: 4/21/2017 Create a logout POST call. Reqs are a boolean value in database. Grab that value if true so recipes
     @PostMapping(path = "/all/findUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Users> findUser(@RequestBody Users user) {
         return userService.findUser(user);

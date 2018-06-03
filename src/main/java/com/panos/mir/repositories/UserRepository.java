@@ -10,9 +10,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by Panos on 3/30/2017.
- */
 public interface UserRepository extends JpaRepository<Users, Integer> {
 
     Users findFirstByUsernameAndPassword(String username, String password);

@@ -4,20 +4,20 @@ package com.panos.mir.model;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Recipe {
+public class RecipeDTO {
     private int id;
     private String title;
     private String description;
     private Users user;
     private Set<IngredientDTO> ingredients = new HashSet<>();
 
-    public Recipe(int id, String title, String description) {
+    public RecipeDTO(int id, String title, String description) {
         this.id = id;
         this.title = title;
         this.description = description;
     }
 
-    public Recipe() {
+    public RecipeDTO() {
     }
 
     public int getId() {

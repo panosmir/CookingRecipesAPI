@@ -24,13 +24,14 @@ public class Recipes implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private Users user;
 
+    @OneToMany(mappedBy = "recipe")
+    private Set<RecipeIngredients> ingredients = new HashSet<>();
+
     @ManyToMany
     @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "recipes_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<Users> favorites = new HashSet<>();
 
-    @OneToMany(mappedBy = "recipe")
-    private Set<RecipeIngredients> ingredients = new HashSet<>();
 
     public Recipes(boolean withId) {
         if (withId)

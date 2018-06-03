@@ -1,14 +1,13 @@
 package com.panos.mir.service;
 
 import com.panos.mir.model.Ingredients;
-import com.panos.mir.model.Recipe;
+import com.panos.mir.model.RecipeDTO;
 import com.panos.mir.model.RecipeIngredients;
 import com.panos.mir.model.Recipes;
 import com.panos.mir.repositories.RecipesRepository;
 import com.panos.mir.rootnames.ApiRootElementNames;
 import com.panos.mir.rootnames.CustomJsonRootName;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -43,7 +42,7 @@ public class RecipesService {
         return result;
     }
 
-    public Recipes createRecipe(Recipe recipe) {
+    public Recipes createRecipe(RecipeDTO recipe) {
         if (recipe.getUser() != null) {
             recipes = new Recipes(true);
             if (repo.findById(recipes.getId()) == null) {
@@ -85,7 +84,7 @@ public class RecipesService {
             return null;
     }
 
-    public Map<String, Recipes> updateRecipe(Recipe recipe) {
+    public Map<String, Recipes> updateRecipe(RecipeDTO recipe) {
         if (repo.findRecipesByUserAndId(recipe.getUser().getUser_id(), recipe.getId()) != null) {
             Recipes recipes = new Recipes(false);
             recipes.setId(recipe.getId());
