@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CookingRecipesAPI</title>
+</head>
+<body>
+<div>
+    <h1>CookingRecipesAPI Endpoints list</h1>
+    <h3>Recipes endpoint (/recipes)</h3>
+    <ul>
+        <li>/all (Shows all the recipes)</li>
+        <li>/all/{id} (Shows a recipe by id)</li>
+        <li>/all/userId/{id} (Shows the recipes that a user has created)</li>
+        <li>/all/userId/create (Create a recipe)</li>
+        <li>/all/findbyTitle/{title} (Find a recipe by title)</li>
+        <li>/delete (Deletes a recipe)</li>
+        <li>/update (Updates recipes data)</li>
+        <li>/ingredients/{recipe_id} (Shows the ingredients of a recipe)</li>
+        <li>/ingredients/add (Map ingredients to a recipe)</li>
+        <li>/ingredients/findByIngredients (Search a recipe by ingredients)</li>
+    </ul>
+    <h3>User endpoint (/users)</h3>
+    <ul>
+        <li>/create (Register a user)</li>
+        <li>/findUser (Login a user)</li>
+    </ul>
+    <h3>Categories endpoint (/categories)</h3>
+    <ul>
+        <li>/all (Shows all categories)</li>
+        <li>/findById/{id} (Shows a category by id)</li>
+    </ul>
+    <h3>Ingredients endpoint (/ingredient)</h3>
+    <ul>
+        <li>/all (Shows all the ingredients)</li>
+        <li>/findById/{id} (Shows ingredients by id)</li>
+        <li>/findByTitle/{title} (Find an ingredient by its title)</li>
+        <li>/findByCategoryId/{id} (Shows ingredients by category)</li>
+    </ul>
+</div>
+</body>
+</html>

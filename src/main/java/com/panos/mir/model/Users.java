@@ -2,6 +2,7 @@ package com.panos.mir.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.*;
 
 import javax.persistence.*;
@@ -22,14 +23,13 @@ public class Users {
     private String username;
 
     @Column(name = "password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @OneToMany(mappedBy = "user")
     private Set<Recipes> recipes;
 
-    @ManyToMany
-    @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "recipes_id"))
+    @ManyToMany(mappedBy = "favorites")
     private Set<Recipes> user_favorites = new HashSet<>();
 
     public Users() {

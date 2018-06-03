@@ -9,9 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by Panos on 5/2/2017.
- */
 public interface IngredientsRepository extends JpaRepository<Ingredients, Integer> {
 
     @Query("select ingredients from Ingredients ingredients where ingredients.id=:id")

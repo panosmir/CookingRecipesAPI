@@ -8,6 +8,7 @@ import com.panos.mir.repositories.RecipesRepository;
 import com.panos.mir.repositories.UserRepository;
 import com.panos.mir.rootnames.ApiRootElementNames;
 import com.panos.mir.rootnames.CustomJsonRootName;
+import com.panos.mir.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,38 +31,22 @@ public class UserController {
     @Autowired
     private RecipesRepository mRecipesRepository;
 
-    //Returns all the users (For testing purposes only)
-    @GetMapping("/all")
-    public @ResponseBody
-    ResponseEntity<Map<String, Iterable<Users>>> getUsers() {
-        List<Users> users = (List<Users>) repository.findAll();
-        Map result = new HashMap();
-        result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).users(), users);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+    @Autowired
+    private UserService userService;
 
     //Register a user
     @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Users> create(@RequestBody Users user) {
-        if (repository.findFirstByUsername(user.getUsername()) == null) {
-            Users saved = repository.save(user);
-            return new ResponseEntity<Users>(saved, HttpStatus.CREATED);
-        } else {
-            throw new BadRequestException();
-        }
+        return userService.createUser(user);
     }
 
     //Login call.
-    //// TODO: 4/21/2017 Create a logout POST call. Reqs are a boolean value in database. Grab that value if true so recipes
     @PostMapping(path = "/all/findUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Users> findUser(@RequestBody Users user) {
-        if (repository.findFirstByUsernameAndPassword(user.getUsername(), user.getPassword()) != null) {
-            return new ResponseEntity<Users>(repository.findFirstByUsernameAndPassword(user.getUsername(), user.getPassword()), HttpStatus.OK);
-        } else {
-            throw new NotFoundException();
-        }
+        return userService.findUser(user);
     }
 
+    //When favorite system will be implemented it'll be moved to UserService.
     @GetMapping("/userFavorites/{id}")
     public ResponseEntity<Map<String, Iterable<Recipes>>> getUserFavorites(@PathVariable("id") int id) {
         Set<Recipes> favRecipes = repository.getUserFavorites(id);
