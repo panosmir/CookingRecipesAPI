@@ -49,21 +49,25 @@ public class RecipesService {
                 recipes.setTitle(recipe.getTitle());
                 recipes.setDescription(recipe.getDescription());
                 recipes.setUser(recipe.getUser());
-                recipe.getIngredients().forEach(ingredient -> {
-                    Ingredients ingredients = new Ingredients();
-                    ingredients.setId(ingredient.getId());
-                    ingredients.setIngredient(ingredient.getIngredient());
-                    ingredients.setCategory(ingredient.getCategories());
-                    RecipeIngredients recipeIngredients = new RecipeIngredients(recipes, ingredients, ingredient.getQuantity());
-                    recipes.getIngredients().add(recipeIngredients);
-                    entityManager.persist(recipes);
-                    entityManager.persist(recipeIngredients);
-                });
+                persistRecipe(recipe, recipes);
 //                entityManager.merge(recipes);
                 entityManager.flush();
             }
         }
         return recipes;
+    }
+
+    private void persistRecipe(RecipeDTO recipe, Recipes recipes) {
+        recipe.getIngredients().forEach(ingredient -> {
+            Ingredients ingredients = new Ingredients();
+            ingredients.setId(ingredient.getId());
+            ingredients.setIngredient(ingredient.getIngredient());
+            ingredients.setCategory(ingredient.getCategories());
+            RecipeIngredients recipeIngredients = new RecipeIngredients(recipes, ingredients, ingredient.getQuantity());
+            recipes.getIngredients().add(recipeIngredients);
+            entityManager.persist(recipes);
+            entityManager.persist(recipeIngredients);
+        });
     }
 
     public Map<String, Iterable<Recipes>> findRecipesByTitle(String title) {
@@ -94,19 +98,8 @@ public class RecipesService {
 
             repo.delete(recipes);
 
-            recipe.getIngredients().forEach(ingredient -> {
-                Ingredients ingredients = new Ingredients();
-                ingredients.setId(ingredient.getId());
-                ingredients.setIngredient(ingredient.getIngredient());
-                ingredients.setCategory(ingredient.getCategories());
-                RecipeIngredients recipeIngredients = new RecipeIngredients(recipes, ingredients, ingredient.getQuantity());
-                recipes.getIngredients().add(recipeIngredients);
-                entityManager.persist(recipes);
-                entityManager.persist(recipeIngredients);
-            });
-//            repo.save(recipes);
+            persistRecipe(recipe, recipes);
             entityManager.flush();
-//            entityManager.merge(recipes);
 
             Map result = new HashMap();
             result.put(ApiRootElementNames.class.getAnnotation(CustomJsonRootName.class).recipes(), recipes);
